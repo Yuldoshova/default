@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './common/docs/swagger';
+import { HttpExceptionFilter } from './common/exception/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,9 @@ async function bootstrap() {
   const host = configService.get<string>('APP_HOST', 'localhost')
   const environment = configService.get<string>('NODE_ENV', 'development')
   const swaggerEnabled = configService.get<boolean>('SWAGGER_ENABLED', environment === 'development');
+
+  // Global Exception Filter
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // Request Validation
   app.useGlobalPipes(new ValidationPipe({
