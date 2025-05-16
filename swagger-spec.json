@@ -112,16 +112,16 @@
         ]
       }
     },
-    "/api/v1/auth": {
+    "/api/v1/auth/register": {
       "post": {
-        "operationId": "create",
+        "operationId": "signUp",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateAuthDto"
+                "$ref": "#/components/schemas/RegisterDto"
               }
             }
           }
@@ -134,12 +134,24 @@
         "tags": [
           "Auth"
         ]
-      },
-      "get": {
-        "operationId": "findAll",
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "signIn",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
         "responses": {
-          "200": {
+          "201": {
             "description": ""
           }
         },
@@ -148,73 +160,22 @@
         ]
       }
     },
-    "/api/v1/auth/{id}": {
-      "get": {
-        "operationId": "findOne",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      },
-      "patch": {
-        "operationId": "update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+    "/api/v1/auth/refresh-token": {
+      "post": {
+        "operationId": "refreshToken",
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAuthDto"
+                "$ref": "#/components/schemas/LoginDto"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      },
-      "delete": {
-        "operationId": "remove",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
+          "201": {
             "description": ""
           }
         },
@@ -335,13 +296,31 @@
           }
         }
       },
-      "CreateAuthDto": {
+      "RegisterDto": {
         "type": "object",
         "properties": {}
       },
-      "UpdateAuthDto": {
+      "LoginDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "User's phone number (Uzbekistan format: +998XXXXXXXXX)",
+            "example": "+998901234567",
+            "maxLength": 13,
+            "minLength": 13
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password (min 6 characters, must include letters and numbers)",
+            "example": "admin123",
+            "minLength": 6
+          }
+        },
+        "required": [
+          "phone",
+          "password"
+        ]
       }
     }
   }
